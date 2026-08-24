@@ -639,6 +639,9 @@ func (s *SubJsonService) tlsData(tData map[string]any) map[string]any {
 	if fingerprint, ok := tlsClientSettings["fingerprint"].(string); ok {
 		tlsData["fingerprint"] = fingerprint
 	}
+	if cs, ok := tData["cipherSuites"].(string); ok && cs != "" {
+		tlsData["cipherSuites"] = cs
+	}
 	if ech, ok := tlsClientSettings["echConfigList"].(string); ok && ech != "" {
 		tlsData["echConfigList"] = ech
 	}
@@ -691,7 +694,8 @@ func jsonMux(global, override string) string {
 func (s *SubJsonService) genVnext(inbound *model.Inbound, streamSettings json_util.RawMessage, client model.Client, mux string) json_util.RawMessage {
 	outbound := Outbound{
 		Protocol: string(inbound.Protocol),
-		Tag:      "proxy"}
+		Tag:      "proxy",
+	}
 	if mux != "" {
 		outbound.Mux = json_util.RawMessage(mux)
 	}
@@ -794,7 +798,8 @@ func (s *SubJsonService) genServer(subReq *SubService, inbound *model.Inbound, s
 func (s *SubJsonService) genHy(inbound *model.Inbound, newStream map[string]any, client model.Client, mux string) json_util.RawMessage {
 	outbound := Outbound{
 		Protocol: string(inbound.Protocol),
-		Tag:      "proxy"}
+		Tag:      "proxy",
+	}
 
 	if mux != "" {
 		outbound.Mux = json_util.RawMessage(mux)
